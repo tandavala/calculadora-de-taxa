@@ -120,7 +120,7 @@ class _SIFormState extends State<SIForm> {
                         style: textStyle,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
-                          labelText: 'Termo',
+                          labelText: 'Ano',
                           labelStyle: textStyle,
                           hintText: 'tempo no ano',
                           border: OutlineInputBorder(
