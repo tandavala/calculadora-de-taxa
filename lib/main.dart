@@ -28,6 +28,7 @@ class _SIFormState extends State<SIForm> {
   var _currincies = ['Kwanza', 'Dollars','Euro'];
   var _currentItemSelected = 'Kwanza';
   final double _minimumPadding = 5.0;
+  String displayText = '';
 
   TextEditingController principalControlled = TextEditingController();
   TextEditingController roiControlled = TextEditingController();
@@ -133,7 +134,9 @@ class _SIFormState extends State<SIForm> {
                           style: TextStyle(fontSize: 22.0, color: Colors.white),
                         ),
                         onPressed: (){
-                          //
+                          setState(() {
+                            this.displayText = _calculateTotalReturns();
+                          });
                         },
                       ),
                     ),
@@ -146,7 +149,9 @@ class _SIFormState extends State<SIForm> {
                           style: TextStyle(fontSize: 22.0, color: Colors.white),
                         ),
                         onPressed: (){
-                          //
+                          setState(() {
+                            _reset();
+                          });
                         },
                       ),
                     )
@@ -157,8 +162,8 @@ class _SIFormState extends State<SIForm> {
               padding: EdgeInsets.only(top: _minimumPadding * 5),
               child: Center(
                 child: Text(
-                "App todo",
-                style: TextStyle(fontSize: 30.0),
+                this.displayText,
+                style: TextStyle(fontSize: 20.0),
               ),
               ),
             )
@@ -178,5 +183,18 @@ class _SIFormState extends State<SIForm> {
       ) 
     );
   }
-
+ String _calculateTotalReturns(){
+   double principal = double.parse(principalControlled.text);
+   double term = double.parse(termControlled.text);
+   double roi = double.parse(roiControlled.text);
+   double totalAmount = principal + (principal * roi * term)/100;
+   return "Depois de $term anos, o teu investimento vai valer $totalAmount $_currentItemSelected";
+ }
+ void _reset(){
+   principalControlled.text = "";
+   roiControlled.text = "";
+   termControlled.text = "";
+   this.displayText = '';
+   _currentItemSelected = _currincies[0];
+ }
 }
