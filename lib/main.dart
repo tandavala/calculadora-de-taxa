@@ -25,14 +25,25 @@ class SIForm extends StatefulWidget {
 }
 
 class _SIFormState extends State<SIForm> {
+
+  var _formkey = GlobalKey<FormState>();
+
   var _currincies = ['Kwanza', 'Dollars','Euro'];
-  var _currentItemSelected = 'Kwanza';
+  var _currentItemSelected = '';
   final double _minimumPadding = 5.0;
   String displayText = '';
 
   TextEditingController principalControlled = TextEditingController();
   TextEditingController roiControlled = TextEditingController();
   TextEditingController termControlled = TextEditingController();
+  
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _currentItemSelected = _currincies[0];
+  }
+  
   @override
   Widget build(BuildContext context) {
     
@@ -41,20 +52,27 @@ class _SIFormState extends State<SIForm> {
       appBar: AppBar(
         backgroundColor: Colors.lightBlue,
         title: Text(
-          "Calculadora de taxa",
+          "Calculando ROI",
           style: TextStyle(fontSize: 30.0),
         ),
       ),
-      body: Container(
-        margin: EdgeInsets.all(_minimumPadding),
-        child: ListView(
+      body: Form(
+        key: _formkey,
+        child: Padding(
+          padding: EdgeInsets.all(_minimumPadding * 2),
+          child: ListView(
           children: <Widget>[
             getHeadImage(),
             Padding(
               padding: EdgeInsets.all(_minimumPadding),
-              child: TextField(
+              child: TextFormField(
                 style: textStyle,
                 controller: principalControlled,
+                validator: (String value){
+                  if(value.isEmpty){
+                    return "A caixa de texto nao pode estar vazio";
+                  }
+                },
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     labelText: 'Principal',
@@ -68,8 +86,14 @@ class _SIFormState extends State<SIForm> {
             ),
             Padding(
               padding: EdgeInsets.all(_minimumPadding),
-              child: TextField(
+              child: TextFormField(
                 controller: roiControlled,
+                validator: (String value){
+                  if(value.isEmpty){
+                    return "A caixa de texto nao pode estar vazio";
+                  }
+
+                },
                 style: textStyle,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
@@ -88,8 +112,11 @@ class _SIFormState extends State<SIForm> {
                    
                   children: <Widget>[
                     Expanded(
-                      child: TextField(
+                      child: TextFormField(
                         controller: termControlled,
+                        validator: (String value){
+                          return "A caixa de texto nao pode estar vazio";
+                        },
                         style: textStyle,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
@@ -135,7 +162,9 @@ class _SIFormState extends State<SIForm> {
                         ),
                         onPressed: (){
                           setState(() {
-                            this.displayText = _calculateTotalReturns();
+                            if(_formkey.currentState.validate()){
+                              this.displayText = _calculateTotalReturns();
+                            }
                           });
                         },
                       ),
@@ -169,6 +198,7 @@ class _SIFormState extends State<SIForm> {
             )
           ],
         ),
+        ),
       ),
     );
   }
@@ -183,7 +213,7 @@ class _SIFormState extends State<SIForm> {
       ) 
     );
   }
- String _calculateTotalReturns(){
+ String _calculateTotalReturns(){ 
    double principal = double.parse(principalControlled.text);
    double term = double.parse(termControlled.text);
    double roi = double.parse(roiControlled.text);
