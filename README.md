@@ -3,7 +3,7 @@
 A new Flutter project.
 
 
-<img src="screen.png" >
+<img src="screen.png" style="margin-left: 120px;">
 
 ## Getting Started
 
